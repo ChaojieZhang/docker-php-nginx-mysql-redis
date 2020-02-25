@@ -1,0 +1,17 @@
+version: '3'
+services:
+    nginx:
+        depends_on: 
+            - php
+        image: nginx:latest
+        volumes:
+            # nginx config
+            - ./nginx/:/etc/nginx/conf.d
+            # files
+            - ./app/html:/opt/html
+        ports: 
+            - 80:80
+    php:
+        build: ./php
+        volumes: 
+            - ./app/php:/opt/php

@@ -1,4 +1,4 @@
-version: '3'
+version: "2"
 services:
     nginx:
         depends_on: 
@@ -7,11 +7,14 @@ services:
         volumes:
             # nginx config
             - ./nginx/:/etc/nginx/conf.d
-            # files
+            # dist html
             - ./app/html:/opt/html
         ports: 
-            - 80:80
-    php:
+            - 9000:80
+    php-fpm:
         build: ./php
+        working_dir: /opt/php
+        command: bash -c "php-fpm && composer install"
         volumes: 
+            # php code
             - ./app/php:/opt/php

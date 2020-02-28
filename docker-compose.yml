@@ -1,8 +1,8 @@
-version: "2"
+version: "3"
 services:
     nginx:
         depends_on: 
-            - php
+            - php-fpm
         image: nginx:latest
         volumes:
             # nginx config
@@ -12,9 +12,25 @@ services:
         ports: 
             - 9000:80
     php-fpm:
-        build: ./php
+        build: ./php-fpm
+        depends_on: 
+            - db
         working_dir: /opt/php
         command: bash -c "php-fpm && composer install"
         volumes: 
             # php code
             - ./app/php:/opt/php
+    db:
+        image: mysql
+        command: --default-authentication-plugin=mysql_native_password
+        restart: always
+        volumes: 
+            - ./data/mysql:/var/lib/mysql
+        ports: 
+            - 33060:3306
+        environment:
+            MYSQL_ROOT_PASSWORD: 123456 
+            MYSQL_DATABASE: main
+    redis:
+        image: redis
+        
